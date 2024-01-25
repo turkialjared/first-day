@@ -11,7 +11,13 @@ module.exports.allaccount = async (req, res, next) => {
 
 module.exports.getaccount = async (req, res, next) => {
   try {
-    const account = await Accounts.findById();
+    const _id = req.body._id;
+    const account = await Accounts.findById(_id);
+
+    if (!account) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
     return res.status(200).json(account);
   } catch (error) {
     next(error);
@@ -19,24 +25,20 @@ module.exports.getaccount = async (req, res, next) => {
 };
 
 module.exports.createAccount = async (req, res, next) => {
-  console.log(req.body);
-  Accounts.push({
-    id: Accounts[Accounts.length - 1].id + 1,
-    username: req.body.username,
-    funds: 0,
-  });
-  return res.status(201).json(Accountsccounts);
+  const account = Accounts.create(req.body);
+  return res.status(201).json({ account });
 };
-module.exports.deleteAccount = (req, res, next) => {
+module.exports.deleteAccount = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const account = Accounts.find((account) => {
-      return account.id == id;
-    });
+    const _id = req.body._id;
+    const account = await Accounts.findById(_id);
+
     if (!account) {
       return res.status(404).json({ message: "Account not found" });
     }
-    return res.status(202).json(account);
+    const delete1 = await Accounts.deleteOne(account);
+
+    return res.status(202).json(delete1);
   } catch (error) {
     next(error);
   }

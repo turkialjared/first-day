@@ -17,8 +17,8 @@ router1.param("_id", async (req, res, next, _id) => {
   next();
 });
 router1.get("/", allaccount);
-router1.get("/:id", getaccount);
+router1.get("/", getaccount);
 router1.post("/", createAccount);
-router1.delete("/:id", deleteAccount);
+router1.delete("/", deleteAccount);
 
 module.exports = router1;
